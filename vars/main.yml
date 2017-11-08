@@ -1,0 +1,23 @@
+---
+# vars file for acme-tiny-request/
+acme__tiny__config_dir: '{{ app__acme__tiny__config_dir |
+                            d(default__acme__tiny__config_dir) }}'
+acme__tiny__openssl_config: '{{ app__acme__tiny__openssl_config |
+                            d(default__acme__tiny__openssl_config) }}'
+
+acme__tiny__domain: '{{ app__acme__tiny__domain |
+                            d(default__acme__tiny__domain) }}'
+
+acme__tiny__cert_name: '{{ acme__tiny__domain[0]
+                            if (acme__tiny__domain is iterable and
+                            not acme__tiny__domain is string)
+                            else acme__tiny__domain }}'
+
+acme__tiny__cert_path: '{{ acme__tiny__config_dir }}/{{ acme__tiny__cert_name }}'
+acme__tiny__cert_dir: '{{ acme__tiny__cert_path }}'
+acme__tiny__key: '{{ acme__tiny__cert_path }}.key'
+acme__tiny__request: '{{ acme__tiny__cert_path }}.csr'
+
+acme__tiny__key_length: '{{ app__acme__tiny__key_length |
+                            d(default__acme__tiny__key_length) }}'
+

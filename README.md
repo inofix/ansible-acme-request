@@ -1,13 +1,13 @@
-[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-tiny-request.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-tiny-request)
+[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-request.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-request)
 
 
-Acme-Tiny Setup
+Acme Setup
 ===============
 
 This is an ansible role for creating a certificate request, and just the request. For signing certificates, take a look at inofix.acme-tiny-sign.
 
 This role is meant to be run on any host that needs certificates for itself.
- If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-tiny-cron-proxy for an example.
+ If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-cron-proxy for an example.
 
 The development of this role was started within zwischenloesung.acme-tiny-setup which was later split.
 
@@ -33,7 +33,7 @@ If radical changes should become necessary, a new role will be created, probably
 Installation
 ------------
 
- # ansible-galaxy install inofix.acme-tiny-request
+ # ansible-galaxy install inofix.acme-request
 
 Requirements
 ------------
@@ -47,27 +47,27 @@ Requirements
 Role Variables
 --------------
 
-* app\_\_acme\_\_tiny\_\_config\_dir - optional, default='/etc/ssl/acme-tiny'
-* app\_\_acme\_\_tiny\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
-* app\_\_acme\_\_tiny\_\_domain - optional, default='example.com'
-* app\_\_acme\_\_tiny\_\_cert\_name - optional, auto
-* app\_\_acme\_\_tiny\_\_cert\_path - optional, default='/etc/ssl/acme-tiny/{{ app\_\_acme\_\_tiny\_\_cert\_name }}'
-* app\_\_acme\_\_tiny\_\_cert\_dir - optional, auto
-* app\_\_acme\_\_tiny\_\_key - optional, auto
-* app\_\_acme\_\_tiny\_\_request - optional, auto
-* app\_\_acme\_\_tiny\_\_key\_length - optional, default=4096
+* app\_\_acme\_\_config\_dir - optional, default='/etc/ssl/acme'
+* app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
+* app\_\_acme\_\_domain - optional, default='example.com'
+* app\_\_acme\_\_cert\_name - optional, auto
+* app\_\_acme\_\_cert\_path - optional, default='/etc/ssl/acme/{{ app\_\_acme\_\_cert\_name }}'
+* app\_\_acme\_\_cert\_dir - optional, auto
+* app\_\_acme\_\_key - optional, auto
+* app\_\_acme\_\_request - optional, auto
+* app\_\_acme\_\_key\_length - optional, default=4096
 
 Dependencies
 ------------
 
-* inofix.acme-tiny-setup
+* inofix.acme-setup
 
 Example Playbook
 ----------------
 
     - hosts: servers
       roles:
-         - inofix.acme-tiny-setup
+         - inofix.acme-request
 
 License
 -------

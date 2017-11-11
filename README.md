@@ -2,7 +2,7 @@
 
 
 Acme Setup
-===============
+==========
 
 This is an ansible role for creating a certificate request, and just the request. For signing certificates, take a look at inofix.acme-tiny-sign.
 

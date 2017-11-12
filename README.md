@@ -51,6 +51,7 @@ Role Variables
 * app\_\_acme\_\_config\_dir - optional, default='/etc/ssl/acme'
 * app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
 * app\_\_acme\_\_domain - optional, default='example.com'
+  * actually here you can provide a app\_\_acme\_\_domain\_request if the list is not the same as for the app\_\_acme\_\_domain (e.g. if a host signs both certificates for itself and as a proxy for remote service hosts)
 * app\_\_acme\_\_cert\_name - optional, auto
 * app\_\_acme\_\_cert\_path - optional, default='/etc/ssl/acme/{{ app\_\_acme\_\_cert\_name }}'
 * app\_\_acme\_\_cert\_dir - optional, auto

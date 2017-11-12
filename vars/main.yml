@@ -5,7 +5,7 @@ acme__config_dir: '{{ app__acme__config_dir |
 acme__openssl_config: '{{ app__acme__openssl_config |
                             d(default__acme__openssl_config) }}'
 
-acme__domain: '{{ app__acme__domain |
+acme__domain: '{{ app__acme__domain_request | d(app__acme__domain) |
                             d(default__acme__domain) }}'
 
 acme__cert_name: '{{ acme__domain[0]

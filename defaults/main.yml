@@ -1,6 +1,9 @@
 ---
 # defaults file for acme-request/
 
+default__acme__user: 'acme'
+default__acme__os__cert_group: 'ssl-cert'
+
 default__acme__config_dir: '/etc/ssl/acme'
 default__acme__openssl_config: '/etc/ssl/openssl.cnf'
 

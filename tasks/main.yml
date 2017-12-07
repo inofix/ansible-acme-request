@@ -6,8 +6,8 @@
     state: directory
     path: '{{ acme__cert_path }}'
     owner: '{{ acme__user }}'
-    group: '{{ acme__os__cert_group }}'
-    mode: '0750'
+    group: '{{ acme__group }}'
+    mode: '0755'
   vars:
     acme__cert_name: '{{ item.domain[0]
                         if ( item.domain is iterable and

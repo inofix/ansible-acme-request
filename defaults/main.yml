@@ -8,7 +8,7 @@ default__acme__config_dir: '/etc/ssl/acme'
 default__acme__openssl_config: '/etc/ssl/openssl.cnf'
 
 default__acme__domain:
-    domain: 'example.com'
+  domain: 'example.com'
 
 default__acme__key_length: 4096
 

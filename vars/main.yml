@@ -1,5 +1,6 @@
 ---
 # vars file for acme-request/
+the__fqdn: '{{ fqdn | d(ansible_fqdn) | d(inventory_hostname) }}'
 acme__user: '{{ app__acme__user | d(default__acme__user) }}'
 acme__group: '{{ app__acme__group | d(default__acme__group) }}'
 
@@ -8,7 +9,8 @@ acme__config_dir: '{{ app__acme__config_dir |
 acme__openssl_config: '{{ app__acme__openssl_config |
                             d(default__acme__openssl_config) }}'
 
-acme__cs: '{{ app__acme__domain | selectattr("request") | list() }}'
+acme__cs: '{{ app__acme__domain | selectattr("request", "equalto", the__fqdn) |
+                            list() }}'
 acme__domain: '{{ acme__cs | d(default__acme__domain) }}'
 
 acme__key_length: '{{ app__acme__key_length |

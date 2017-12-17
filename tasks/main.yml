@@ -1,34 +1,77 @@
 ---
 # tasks file for acme-request/
 
-- name: Private key
+- name: 'Prepare the target dir where a service finds the certificate'
+  file:
+    state: directory
+    path: '{{ acme__cert_path }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0755'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
+  with_items: '{{ acme__domain }}'
+
+- name: 'Create private keys'
   shell: "umask 077 && /usr/bin/openssl genrsa '{{ acme__key_length }}' > '{{ acme__key }}'"
   args:
     creates: '{{ acme__key }}'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__key: '{{ acme__config_dir }}/{{ acme__cert_name }}.key'
+  with_items: '{{ acme__domain }}'
 
-- name: Private key permissions
+- name: 'Private key permissions'
   file:
     path: '{{ acme__key }}'
     owner: 'root'
     group: 'root'
     mode: '0600'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__key: '{{ acme__config_dir }}/{{ acme__cert_name }}.key'
+  with_items: '{{ acme__domain }}'
 
-- name: Remove any existing certificate request
+- name: 'Remove any existing certificate request'
   file:
     path: '{{ acme__request }}'
     state: 'absent'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__request: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+  with_items: '{{ acme__domain }}'
 
-- name: Create a new simple certificate request
-  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__key }} -subj "/CN={{ acme__domain }}" > {{ acme__request }}'
+- name: 'Create new certificate requests'
+  shell: '{{ acme__openssl_req }}'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__key: '{{ acme__config_dir }}/{{ acme__cert_name }}.key'
+    acme__request: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+    acme__openssl_single: '/usr/bin/openssl req -new -sha256 -key {{ acme__key }} -subj "/CN={{ item.domain }}" > {{ acme__request }}'
+    acme__openssl_multi: '/usr/bin/openssl req -new -sha256 -key {{ acme__key }} -subj "/" -reqexts SAN -config <(cat {{ acme__openssl_config }} <(printf "[SAN]\nsubjectAltName=DNS:{{ item.domain | join(",DNS:") }}")) > {{ acme__request }}'
+    acme__openssl_req: '{{ acme__openssl_multi
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else acme__openssl_single }}'
   args:
-    creates: '{{ acme__request }}'
-  when: acme__domain is string
-
-- name: Create a new multi-domain certificate request
-  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__key }} -subj "/" -reqexts SAN -config <(cat {{ acme__openssl_config }} <(printf "[SAN]\nsubjectAltName=DNS:{{ acme__domain | join(",DNS:") }}")) > {{ acme__request }}'
-  args:
+##TODO test if really needed..
     executable: '/bin/bash'
     creates: '{{ acme__request }}'
-  when: acme__domain is iterable and not acme__domain is string
-  failed_when: False
+  with_items: '{{ acme__domain }}'
 

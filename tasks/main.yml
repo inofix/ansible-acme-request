@@ -75,3 +75,18 @@
     creates: '{{ acme__request }}'
   with_items: '{{ acme__domain }}'
 
+- name: 'Create an empty (or just touch) cert user "acme" is able to write'
+  file:
+    state: touch
+    path: '{{ acme__certificate }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0644'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if (item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
+    acme__certificate: '{{ acme__cert_path }}.crt'
+  with_items: '{{ acme__domain }}'

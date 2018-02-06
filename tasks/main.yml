@@ -120,3 +120,53 @@
     acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
     acme__certificate: '{{ acme__cert_path }}.crt'
   with_items: '{{ acme__domain }}'
+
+- name: 'Create a consumer key file'
+  copy:
+    remote_src: True
+    src: '{{ acme__key }}'
+    dest: '{{ acme__target_key }}'
+    owner: 'root'
+    group: '{{ acme__os__cert_group }}'
+    mode: '0640'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if (item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
+    acme__key: '{{ acme__cert_path }}.key'
+    acme__target_key: '{{ acme__cert_path }}/{{ acme__cert_name }}.key'
+  with_items: '{{ acme__locally_requested }}'
+
+- name: 'Create an empty (or just touch) consumable cert, which the user "acme" is able to write'
+  file:
+    state: touch
+    path: '{{ acme__target_certificate }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0644'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if (item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
+    acme__target_certificate: '{{ acme__cert_path }}/{{ acme__cert_name }}.crt'
+  with_items: '{{ acme__locally_requested }}'
+
+- name: 'Create an empty (or just touch) consumable chain cert, which the user "acme" is able to write'
+  file:
+    state: touch
+    path: '{{ acme__target_chain }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0644'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if (item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
+    acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
+    acme__target_chain: '{{ acme__cert_path }}/{{ acme__cert_name }}_chain.crt'
+  with_items: '{{ acme__domain }}'

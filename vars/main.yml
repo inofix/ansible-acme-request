@@ -1,6 +1,9 @@
 ---
 # vars file for acme-request/
 acme__fqdn: '{{ fqdn | d(ansible_fqdn) | d(inventory_hostname) }}'
+acme__os__cert_group: '{{ app__acme__os__cert_group |
+                            d(default__acme__os__cert_group) }}'
+
 acme__user: '{{ app__acme__user | d(default__acme__user) }}'
 acme__group: '{{ app__acme__group | d(default__acme__group) }}'
 

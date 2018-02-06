@@ -91,7 +91,7 @@
 
 - name: 'Copy all requests that were requested on a remote host'
   copy:
-    src: '{{ acme__local_workdir }}/{{ fqdn }}/{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+    src: '{{ acme__local_workdir }}/{{ item.request }}/{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
     dest: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
     backup: 'no'
     force: 'yes'

@@ -60,6 +60,7 @@ Role Variables
 * app\_\_acme\_\_request - optional, auto
 * app\_\_acme\_\_key\_length - optional, default=4096
 * fqdn - optional, default={{ ansible\_fqdn | d(inventory\_hostname ) }}
+* workdir - optional, default='/tmp', used to store requests for remote signing
 
 Dependencies
 ------------

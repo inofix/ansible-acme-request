@@ -9,9 +9,15 @@ acme__config_dir: '{{ app__acme__config_dir |
 acme__openssl_config: '{{ app__acme__openssl_config |
                             d(default__acme__openssl_config) }}'
 
-acme__cs: '{{ app__acme__domain |
+acme__local_workdir: '{{ workdir | d(default__acme__workdir) }}'
+
+acme__domain: '{{ app__acme__domain | d(default__acme__domain) }}'
+acme__remotely_signed: '{{ app__acme__domain |
+                    rejectattr("sign", "equalto", acme__fqdn) | list() }}'
+acme__remotely_requested: '{{ app__acme__domain |
+                    rejectattr("request", "equalto", acme__fqdn) | list() }}'
+acme__locally_requested: '{{ app__acme__domain |
                     selectattr("request", "equalto", acme__fqdn) | list() }}'
-acme__domain: '{{ acme__cs | d(default__acme__domain) }}'
 
 acme__key_length: '{{ app__acme__key_length |
                             d(default__acme__key_length) }}'

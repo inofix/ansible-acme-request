@@ -26,7 +26,7 @@
                                 not item.domain is string)
                         else item.domain }}'
     acme__key: '{{ acme__config_dir }}/{{ acme__cert_name }}.key'
-  with_items: '{{ acme__domain }}'
+  with_items: '{{ acme__locally_requested }}'
 
 - name: 'Private key permissions'
   file:
@@ -40,7 +40,7 @@
                                 not item.domain is string)
                         else item.domain }}'
     acme__key: '{{ acme__config_dir }}/{{ acme__cert_name }}.key'
-  with_items: '{{ acme__domain }}'
+  with_items: '{{ acme__locally_requested }}'
 
 - name: 'Remove any existing certificate request'
   file:
@@ -52,7 +52,7 @@
                                 not item.domain is string)
                         else item.domain }}'
     acme__request: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
-  with_items: '{{ acme__domain }}'
+  with_items: '{{ acme__locally_requested }}'
 
 - name: 'Create new certificate requests'
   shell: '{{ acme__openssl_req }}'
@@ -73,9 +73,29 @@
 ##TODO test if really needed..
     executable: '/bin/bash'
     creates: '{{ acme__request }}'
-  with_items: '{{ acme__domain }}'
+  with_items: '{{ acme__locally_requested }}'
 
-- name: 'Create an empty (or just touch) cert user "acme" is able to write'
+- name: 'Fetch all requests that will be signed on a remote host'
+  fetch:
+    src: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+    dest: '{{ acme__local_workdir }}'
+    fail_on_missing: 'yes'
+    flat: 'no'
+    validate_checksum: 'yes'
+  with_items: '{{ acme__remotely_signed }}'
+
+- name: 'Copy all requests that were requested on a remote host'
+  copy:
+    src: '{{ acme__local_workdir }}/{{ fqdn }}/{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+    dest: '{{ acme__config_dir }}/{{ acme__cert_name }}.csr'
+    backup: 'no'
+    force: 'yes'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0644'
+  with_items: '{{ acme__remotely_requested }}'
+
+- name: 'Create an empty (or just touch) cert, which the user "acme" is able to write'
   file:
     state: touch
     path: '{{ acme__certificate }}'

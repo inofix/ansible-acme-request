@@ -5,8 +5,8 @@
   file:
     state: directory
     path: '{{ acme__cert_path }}'
-    owner: '{{ acme__user }}'
-    group: '{{ acme__group }}'
+    owner: 'root'
+    group: 'root'
     mode: '0755'
   vars:
     acme__cert_name: '{{ item.domain[0]

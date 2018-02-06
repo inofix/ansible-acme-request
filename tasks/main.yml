@@ -82,6 +82,11 @@
     fail_on_missing: 'yes'
     flat: 'no'
     validate_checksum: 'yes'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
   with_items: '{{ acme__remotely_signed }}'
 
 - name: 'Copy all requests that were requested on a remote host'
@@ -93,6 +98,11 @@
     owner: '{{ acme__user }}'
     group: '{{ acme__group }}'
     mode: '0644'
+  vars:
+    acme__cert_name: '{{ item.domain[0]
+                        if ( item.domain is iterable and
+                                not item.domain is string)
+                        else item.domain }}'
   with_items: '{{ acme__remotely_requested }}'
 
 - name: 'Create an empty (or just touch) cert, which the user "acme" is able to write'

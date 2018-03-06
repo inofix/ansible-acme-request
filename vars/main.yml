@@ -6,6 +6,7 @@ acme__os__cert_group: '{{ app__acme__os__cert_group |
 
 acme__user: '{{ app__acme__user | d(default__acme__user) }}'
 acme__group: '{{ app__acme__group | d(default__acme__group) }}'
+acme__home: '{{ app__acme__home | d(default__acme__home) }}'
 
 acme__config_dir: '{{ app__acme__config_dir |
                             d(default__acme__config_dir) }}'
@@ -24,4 +25,6 @@ acme__locally_requested: '{{ app__acme__domain |
 
 acme__key_length: '{{ app__acme__key_length |
                             d(default__acme__key_length) }}'
+acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype) }}'
+
 

@@ -1,8 +1,8 @@
 [![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-request.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-request)
 
 
-Acme Setup
-==========
+Acme Request
+============
 
 This is an ansible role for creating a certificate request, and just the request. For signing certificates, take a look at inofix.acme-tiny-sign.
 

@@ -107,14 +107,14 @@
 
 - name: 'Allow access to the user "acme" from the remote hosts to the cert it requested'
   lineinfile:
-    path: '{{ acme__home }}/.ssh/authorized_keys'
+    dest: '{{ acme__home }}/.ssh/authorized_keys'
     line: 'command="/usr/local/bin//acme-wrapper.sh" {{ lookup("file", acme__key_file) }}'
     create: 'yes'
     owner: '{{ acme__user }}'
     group: '{{ acme__group }}'
     mode: '0600'
   vars:
-    acme_key_file: '{{ acme__local_workdir }}/{{ item.request }}/{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
+    acme__key_file: '{{ acme__local_workdir }}/{{ item.request }}/{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
   with_items: '{{ acme__remotely_requested }}'
 
 - name: 'Create an empty (or just touch) cert, which the user "acme" is able to write'

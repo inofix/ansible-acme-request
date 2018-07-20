@@ -114,7 +114,7 @@
     group: '{{ acme__group }}'
     mode: '0600'
   vars:
-    acme_key_file: '{{ acme__local_workdir }}/{{ item.request }}/{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
+    acme__key_file: '{{ acme__local_workdir }}/{{ item.request }}/{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
   with_items: '{{ acme__remotely_requested }}'
 
 - name: 'Create an empty (or just touch) cert, which the user "acme" is able to write'

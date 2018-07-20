@@ -107,7 +107,7 @@
 
 - name: 'Allow access to the user "acme" from the remote hosts to the cert it requested'
   lineinfile:
-    path: '{{ acme__home }}/.ssh/authorized_keys'
+    dest: '{{ acme__home }}/.ssh/authorized_keys'
     line: 'command="/usr/local/bin//acme-wrapper.sh" {{ lookup("file", acme__key_file) }}'
     create: 'yes'
     owner: '{{ acme__user }}'
